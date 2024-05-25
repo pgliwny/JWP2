@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teachers List</title>
+</head>
+<script>
+    
+</script>
+<style>
+    ul {
+    background: #3399ff;
+    padding: 20px;
+    }
+
+    ol li {
+    background: #ffe5e5;
+    color: darkred;
+    padding: 5px;
+    margin-left: 35px;
+    }
+
+    ul li {
+    background: #cce5ff;
+    color: darkblue;
+    margin: 5px;
+    }
+</style>
+<body>
+
+
+    <h1>Teachers</h1>
+    <a href="{{ url_for('add_teacher') }}">Add Teacher</a><br>
+    <a href="{{ url_for('delete_teacher') }}">Delete Teacher</a><br>
+    <ul>
+        {% for user in teachers %}
+        <li>Id: {{user.id}} <br> Username: {{ user.name }} <br>Subject: {{ user.subject }} <br>Create Time: {{ user.time }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
