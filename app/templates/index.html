@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Image</h2>
+        <form id="uploadForm" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <label for="imageUpload">Select an image:</label>
+            <input type="file" id="imageUpload" name="image" accept="image/*" required>
+            <label for="rotationDegrees">Rotation (degrees):</label>
+            <input type="number" id="rotationDegrees" name="rotation_degrees" min="0" max="360" value="0" required></br></br>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="imageList">
+            <h2>Uploaded Images</h2>
+            <!-- Image items will be dynamically generated here -->
+        </div>
+        <div id="imageListRotated">
+            <h2>Rotated Images</h2>
+            <!-- Image items will be dynamically generated here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            const imageInput = document.getElementById('imageUpload');
+            const rotationInput = document.getElementById('rotationDegrees');
+            const file = imageInput.files[0];
+            const rotationDegrees = parseInt(rotationInput.value, 10);
+
+            // Validate image extension
+            if (file && file.name.split('.').pop().toLowerCase() !== 'png') {
+                alert('Please upload a PNG image.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate rotation degrees
+            if (isNaN(rotationDegrees) || rotationDegrees < 0 || rotationDegrees > 360) {
+                alert('Please enter a rotation degree between 0 and 360.');
+                event.preventDefault();
+                return;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch("{{ url_for('get_images') }}")
+                .then(response => response.json())
+                .then(data => {
+                    const imageList = document.getElementById('imageList');
+                    data.images.forEach(image => {
+                        const imageItem = document.createElement('div');
+                        imageItem.classList.add('image-item');
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = "{{ url_for('download_file', filename='') }}" + image.name;
+                        downloadLink.textContent = image.name;
+                        imageItem.appendChild(downloadLink);
+                        imageList.appendChild(imageItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching images:', error));
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch("{{ url_for('get_images_rotated') }}")
+                .then(response => response.json())
+                .then(data => {
+                    const imageList = document.getElementById('imageListRotated');
+                    data.images.forEach(image => {
+                        const imageItem = document.createElement('div');
+                        imageItem.classList.add('image-item');
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = "{{ url_for('download_file_rotated', filename='') }}" + image.name;
+                        downloadLink.textContent = image.name;
+                        imageItem.appendChild(downloadLink);
+                        imageList.appendChild(imageItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching images:', error));
+        });
+    </script>
+</body>
+</html>
