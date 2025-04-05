@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Strona główna</title>
+    <!-- Łączenie z plikiem CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ message }}</h1>
+    <p>To jest przykładowa strona HTML generowana przez Flask.</p>
+    <button id="myButton">Kliknij mnie!</button>
+
+    <!-- Łączenie z plikiem JavaScript -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
